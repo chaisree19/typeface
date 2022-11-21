@@ -1,0 +1,35 @@
+Web scraping, often called web crawling or web spidering, or “programmatically going over a collection of web pages and extracting data,” is a powerful tool for working with data on the web.
+
+With a web scraper, you can mine data about a set of products, get a large corpus of text or quantitative data to play around with, get data from a site without an official API, or just satisfy your own personal curiosity.
+If you look at the page we want to scrape, you’ll see it has the following structure:
+
+There’s a header that’s present on every page.
+There’s some top-level search data, including the number of matches, what we’re searching for, and the breadcrumbs for the site.
+Then there are the sets themselves, displayed in what looks like a table or ordered list. Each set has a similar format.
+Take another look at the HTML for a specific set:
+
+brickset.com/sets/year-2016
+<article class="set">
+  <a class="highslide plain mainimg" href="http://images.brickset.com/sets/images/10251-1.jpg?201510121127" onclick="return hs.expand(this)">
+    <img src="http://images.brickset.com/sets/small/10251-1.jpg?201510121127" title="10251-1: Brick Bank"></a>
+  ...
+  <div class="meta">
+    <h1><a href="/sets/10251-1/Brick-Bank"><span>10251:</span> Brick Bank</a> </h1>
+    ...
+    <div class="col">
+      <dl>
+        <dt>Pieces</dt>
+        <dd><a class="plain" href="/inventories/10251-1">2380</a></dd>
+        <dt>Minifigs</dt>
+        <dd><a class="plain" href="/minifigs/inset-10251-1">5</a></dd>
+        ...
+      </dl>
+    </div>
+    ...
+  </div>
+</article>
+We can see a few things by examining this code:
+
+The image for the set is stored in the src attribute of an img tag inside an a tag at the start of the set. We can use another CSS selector to fetch this value just like we did when we grabbed the name of each set.
+Getting the number of pieces is a little trickier. There’s a dt tag that contains the text Pieces, and then a dd tag that follows it which contains the actual number of pieces. We’ll use XPath, a query language for traversing XML, to grab this, because it’s too complex to be represented using CSS selectors.
+Getting the number of minifigs in a set is similar to getting the number of pieces. There’s a dt tag that contains the text Minifigs, followed by a dd tag right after that with the number.
